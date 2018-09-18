@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberMapper">
+
+<resultMap type="Member" id ="resultMember">
+	<id property="m_no" column="M_NO"/>
+	<result property="m_name" column="M_NAME"/>
+	<result property="m_email" column="M_EMAIL"/>
+	<result property="m_pwd" column="M_PWD"/>
+	<result property="m_enrolldate" column="M_ENROLLDATE"/>
+	<result property="m_connectiondate" column="M_CONNECTIONDATE"/>
+</resultMap>
+
+<select id="selectEmail" parameterType="Member" resultMap="resultMember">
+  	SELECT M_EMAIL
+	FROM MEMBER
+	WHERE M_EMAIL=#{m_email}
+ </select>
+  
+  </mapper>
