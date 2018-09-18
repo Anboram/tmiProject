@@ -72,7 +72,7 @@
 			      }
 		   });
 			      if(returnFlag){
-			    	  $("#joinForm").submit();
+			    	  $("#memberInsertForm").submit();
 			      }
 		}
 	

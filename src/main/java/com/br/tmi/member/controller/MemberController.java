@@ -1,5 +1,9 @@
 package com.br.tmi.member.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,16 +14,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.br.tmi.member.model.service.MemberService;
 import com.br.tmi.member.model.vo.MemberVo;
+import com.br.tmi.util.MailHandler;
 
 @Controller
 public class MemberController {
 	
 	@Autowired
 	MemberService memberService;
+	@Inject
+	JavaMailSender mailSender;
 
 	@RequestMapping("login.do")
 	public String login(){
@@ -42,44 +51,32 @@ public class MemberController {
 		return member == null ?"ok":"x";
 	}
 	
+	
 	@RequestMapping(value="memberInsert.do")
-	public String memberInsert(MemberVo member, Model model, HttpServletRequest request){
+	public String memberInsert(MemberVo member) throws MessagingException, UnsupportedEncodingException{
 		System.out.println(member);
 		int result = memberService.insertMember(member);
-		model.addAttribute(member);
-		return "member/sendEmail.do";
+		if(result>0){
+			System.out.println("메일발송");
+			System.out.println(member.toString());
+			MailHandler sendMail = new MailHandler(mailSender);
+			sendMail.setSubject("[TMI] 회원가입을 환영합니다.");
+			sendMail.setText(new StringBuffer().append("<a href='http://localhost:8081/tmi/memberVerify.do?m_email="+member.getM_email())
+			.append("' target='_blenk'>이메일 인증 확인</a>").toString());
+			sendMail.setFrom("mozleteam@gmail.com", "tmi");
+			sendMail.setTo(member.getM_email());
+			sendMail.send();
+		}else{
+			System.out.println("memberInsert 오류");
+		}
+		return "redirect:index.do";
 	}
-	
-	@Autowired
-	private JavaMailSender mailSender;
-	
-	//이메일 인증 발송
-	@RequestMapping(value="sendEmail.do")
-	public String email(MemberVo member){
-		
-		System.out.println("이동 완료!");
-		String email = "mozleteam@gmail.com";
-		String tomail = member.getM_email();
-		String title = "TMI 회원가입을 축하합니다.";
-		String content = "";
-		
-
-	    try {
-	      MimeMessage message = mailSender.createMimeMessage();
-	      MimeMessageHelper messageHelper 
-	                        = new MimeMessageHelper(message, true, "UTF-8");
-	 
-	      messageHelper.setFrom(email);  // 보내는사람 생략하거나 하면 정상작동을 안함
-	      messageHelper.setTo(tomail);     // 받는사람 이메일
-	      messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
-	      messageHelper.setText(content);  // 메일 내용
-	     
-	      mailSender.send(message);
-	    } catch(Exception e){
-	      System.out.println(e);
-	    }
-		
+	/*
+	@RequestMapping(value="memberVerify.do", method=RequestMethod.GET)
+	public String verify(MemberVo member){
+		System.out.println("이메일 인증 확인");
+		member = memberService.memberVerify(member);
 		return "index.do";
 	}
-	
+	*/
 }
