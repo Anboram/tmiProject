@@ -6,4 +6,12 @@
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.br.tmi.member.model.vo.MemberVo" alias="Member"/> 
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mybatis/sql/memberMapper.xml"/>
+	</mappers>
 </configuration>

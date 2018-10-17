@@ -54,8 +54,9 @@
 			console.log($("m_pwd").val());
 			if($("#m_pwd2").val()!=$("#m_pwd").val()){
 				$("#pwd2_info").text("비밀번호가 맞지 않습니다.").css("color","red");
-			}else{
-				$("#pwd2_info").remove();
+			}
+			else{
+				$("#pwd2_info").text("");
 			}
 		})
 	})

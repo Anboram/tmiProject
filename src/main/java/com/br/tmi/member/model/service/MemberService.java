@@ -20,5 +20,13 @@ public class MemberService {
 		return memberdao.insertMember(member);
 	}
 
+	public MemberVo selectMember(MemberVo member) {
+		return memberdao.selectMember(member);
+	}
+
+	/*public MemberVo memberVerify(MemberVo member) {
+		return memberdao.updateVerify(member);
+	}*/
+
 
 }

@@ -12,6 +12,7 @@ public class MemberVo {
 	private String m_pwd;
 	private Date m_enrolldate;
 	private Date m_connectiondate;
+	private char m_verify;
 	
 	
 	public int getM_no() {
@@ -62,16 +63,26 @@ public class MemberVo {
 		this.m_connectiondate = m_connectiondate;
 	}
 
+	public char getM_verify() {
+		return m_verify;
+	}
+
+	public void setM_verify(char m_verify) {
+		this.m_verify = m_verify;
+	}
+
 	public MemberVo(){}
 
-	public MemberVo(int m_no, String m_name, String m_email, String m_pwd, Date m_enrolldate, Date m_connectiondate) {
-		super();
+
+	public MemberVo(int m_no, String m_name, String m_email, String m_pwd, Date m_enrolldate, Date m_connectiondate,
+			char m_verify) {
 		this.m_no = m_no;
 		this.m_name = m_name;
 		this.m_email = m_email;
 		this.m_pwd = m_pwd;
 		this.m_enrolldate = m_enrolldate;
 		this.m_connectiondate = m_connectiondate;
+		this.m_verify = m_verify;
 	}
 
 	@Override

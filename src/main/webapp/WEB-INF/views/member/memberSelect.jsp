@@ -19,7 +19,7 @@
 				<div class="account-input-box">
 					<h1 class="text-center">로그인</h1>
 					<a id="google" href="#" onclick="" class="fb-login">구글계정으로 로그인</a>
-					<a id="email" href="#" onclick="" class="fb-login">이메일로 로그인</a>
+					<a id="email" href="memberSelectForm.do" onclick="" class="fb-login">이메일로 로그인</a>
 					<div onclick="location.href='join.do'" class="already-registered pointer f-primary text-center">
 						회원이 아니신가요?
 					</div>

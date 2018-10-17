@@ -11,12 +11,25 @@
 	<result property="m_pwd" column="M_PWD"/>
 	<result property="m_enrolldate" column="M_ENROLLDATE"/>
 	<result property="m_connectiondate" column="M_CONNECTIONDATE"/>
+	<result property="m_verify" column="M_VERIFY"/>
 </resultMap>
 
-<select id="selectEmail" parameterType="Member" resultMap="resultMember">
+ <!--중복 이메일 확인 -->
+ <select id="selectEmail" parameterType="Member" resultMap="resultMember">
   	SELECT M_EMAIL
 	FROM MEMBER
 	WHERE M_EMAIL=#{m_email}
  </select>
+ <!-- 회원가입 -->
+ <insert id="insertMember" parameterType="Member">
+ 	INSERT INTO MEMBER VALUES (SEQ_M_NO.NEXTVAL,#{m_name},#{m_email},#{m_pwd},SYSDATE,
+  	SYSDATE,DEFAULT)
+ </insert>
+  <!-- 로그인 -->
+  <select id="selectMember" parameterType="Member" resultMap="resultMember">
+  	SELECT M_NO, M_NAME, M_EMAIL, M_PWD, M_ENROLLDATE, M_CONNECTIONDATE, M_VERIFY
+  	FROM MEMBER
+  	WHERE M_EMAIL=#{m_email}
+  </select>
   
   </mapper>

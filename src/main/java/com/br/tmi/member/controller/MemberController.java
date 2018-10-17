@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.br.tmi.member.model.service.MemberService;
 import com.br.tmi.member.model.vo.MemberVo;
@@ -42,7 +44,11 @@ public class MemberController {
 	public String memberInsertForm(){
 		return "member/memberInsertForm";
 	}
-	
+	@RequestMapping("memberSelectForm.do")
+	public String memberSelectForm(){
+		return "member/memberSelectForm";
+	}
+	//이메일 중복 확인
 	@RequestMapping(value="emailCheck.do", produces="application/text; charset=utf-8")
 	public @ResponseBody String EmailCheck(String m_email){
 		MemberVo member = new MemberVo();
@@ -51,7 +57,7 @@ public class MemberController {
 		return member == null ?"ok":"x";
 	}
 	
-	
+	//회원가입 시 인증이메일 발송
 	@RequestMapping(value="memberInsert.do")
 	public String memberInsert(MemberVo member) throws MessagingException, UnsupportedEncodingException{
 		System.out.println(member);
@@ -71,12 +77,33 @@ public class MemberController {
 		}
 		return "redirect:index.do";
 	}
-	/*
-	@RequestMapping(value="memberVerify.do", method=RequestMethod.GET)
-	public String verify(MemberVo member){
-		System.out.println("이메일 인증 확인");
-		member = memberService.memberVerify(member);
-		return "index.do";
+	
+//	//인증 확인 N->Y
+//	@RequestMapping(value="memberVerify.do", method=RequestMethod.GET)
+//	public String verify(MemberVo member){
+//		System.out.println("이메일 인증 확인,"+member);
+//		member = memberService.memberVerify(member);
+//		return "index.do";
+//	}
+	//로그인
+	@RequestMapping(value="memberLogin.do", method= RequestMethod.POST)
+	public ModelAndView memberLogin(MemberVo member, HttpSession session, ModelAndView mv){
+		MemberVo user = memberService.selectMember(member);
+		//로그인 성공
+		if(user!= null && user.getM_pwd().equals(member.getM_pwd())){
+			session.setAttribute("user", user);
+			mv.setViewName("index");
+		}
+		//로그인 실패
+		else{
+			mv.setViewName("member/memberSelectForm");
+		}
+		return mv;
 	}
-	*/
+	//로그아웃
+	@RequestMapping(value="memberLogout.do",method =RequestMethod.GET)
+	public String memberLogout(HttpSession session){
+		session.invalidate();
+		return "redirect:index.do";
+	}
 }
