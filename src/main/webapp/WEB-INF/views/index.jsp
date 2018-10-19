@@ -15,7 +15,7 @@
 				오늘의  TMI를 알려주세요!
 			</div>
 			<h5>매일 다른 질문이 올라옵니다.</h5>
-			<button class="btn btn-lg">확인하기</button>
+			<input type="button" class="btn btn-lg" value="확인하기" onclick="location.href='boardListSelect.do'">
 		</div>
 	</section>
 	

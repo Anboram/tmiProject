@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BoardMapper">
+
+<resultMap type="Board" id ="resultBoard">
+	<id property="q_no" column="Q_NO"/>
+	<result property="q_question" column="Q_QUESTION"/>
+	<result property="q_date" column="Q_DATE"/>
+	
+	<collection property="a_no" column="NO" resultMap="resultMap" ofType="Reply"/>
+</resultMap>
+<resultMap type="Reply" id="replyMap">
+	<id property="a_no" column="A_NO"/>
+	<result property="a_m_no" column="A_M_NO"/>
+	<result property="a_q_no" column="A_Q_NO"/>
+	<result property="a_answer" column="A_ANSWER"/>
+	<result property="a_writedate" column="A_WRITEDATE"/>
+	<result property="a_delflag" column="A_DELFLAG"/>
+	<result property="a_privateflag" column="A_PRIVATEFLAG"/>
+</resultMap>
+<select id="selectDateBoard" resultType="Board">
+	SELECT Q_NO, Q_QUESTION, Q_DATE
+	FROM QUESTION
+	WHERE TO_CHAR(Q_DATE,'MM-DD')=#{today}
+</select>
+<!-- 인기 답변 조회 -->
+<select id="Board" resultMap="resultBoard" parameterType="hashmap">
+	SELECT Q.Q_NO , Q.Q_QUESTION, Q.Q_DATE, 
+	 A.A_NO,A.A_M_NO,A.A_Q_NO, A.A_ANSWER,
+	  A.A_WRITEDATE, A.A_DELFLAG, A.A_PRIVATEFLAG 
+	  FROM QUESTION Q JOIN ANSWER A ON(Q.Q_NO= A.A_Q_NO) 
+<!-- map에 put한 이름으로 쓰기 -->
+WHERE To_char(q_date,'MM-DD')='10-20';
+</select>
+  
+  </mapper>

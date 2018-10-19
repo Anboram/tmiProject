@@ -57,9 +57,23 @@ public class MemberController {
 		return member == null ?"ok":"x";
 	}
 	
-	//회원가입 시 인증이메일 발송
 	@RequestMapping(value="memberInsert.do")
-	public String memberInsert(MemberVo member) throws MessagingException, UnsupportedEncodingException{
+	public ModelAndView memberInsert(MemberVo member, ModelAndView mv ){
+		int result = memberService.insertMember(member);
+		
+		if(result>0){
+			mv.setViewName("index");
+		}else{
+			mv.setViewName("member/memberInsertForm");
+			mv.addObject("message", "회원가입중 오류가 발생하였습니다.");
+		}
+		return mv;
+	}
+	
+	
+	//회원가입 시 인증번호 이메일 발송
+	//@RequestMapping(value="memberInsert.do")
+	/*public String memberInsert(MemberVo member) throws MessagingException, UnsupportedEncodingException{
 		System.out.println(member);
 		int result = memberService.insertMember(member);
 		if(result>0){
@@ -76,7 +90,7 @@ public class MemberController {
 			System.out.println("memberInsert 오류");
 		}
 		return "redirect:index.do";
-	}
+	}*/
 	
 //	//인증 확인 N->Y
 //	@RequestMapping(value="memberVerify.do", method=RequestMethod.GET)
@@ -85,6 +99,7 @@ public class MemberController {
 //		member = memberService.memberVerify(member);
 //		return "index.do";
 //	}
+	
 	//로그인
 	@RequestMapping(value="memberLogin.do", method= RequestMethod.POST)
 	public ModelAndView memberLogin(MemberVo member, HttpSession session, ModelAndView mv){

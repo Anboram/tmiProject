@@ -10,14 +10,25 @@
 <body>
 <c:import url="../common/header.jsp" />
 <script>
-
+	//회원가입버튼 눌렀을때 잘못된 값 입력했는지 확인하는 count변수
+	var redTextCount = 0;
+	
 	$(function(){
+		//오류 발생시 메시지
+		 	var responseMessage = "<c:out value="${message}" />";
+		  	if(responseMessage != ""){
+	        alert(responseMessage);
+   		 	}
+		
+		  
+		  	
 		$("#m_email").blur(function(){
 			//이메일 형식 정규식
 			var re= /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
 			var checkEmail = $("#m_email").val();
 			if(!re.test(checkEmail)){
 				$("#email_info").text("올바른 형식이 아닌 이메일입니다.").css("color","red");
+				redTextCount++;
 			}else{
 				emailCheck();
 			}
@@ -34,6 +45,7 @@
 					}
 					else{
 						$("#email_info").text("이미 있는 이메일입니다.").css("color","red");
+						redTextCount++;
 					}
 				},
 			}); 
@@ -44,6 +56,7 @@
 			var checkPwd = $("#m_pwd").val();
 			if(!re1.test(checkPwd)){
 				$("#pwd_info").text("사용할 수 없는 비밀번호 입니다.").css("color","red");
+				redTextCount++;
 			}else{
 				$("#pwd_info").text("사용할 수 있는 비밀번호 입니다.").css("color","green");
 			}
@@ -51,9 +64,9 @@
 		
 		$("#m_pwd2").blur(function(){
 			//비밀번호 정규식
-			console.log($("m_pwd").val());
 			if($("#m_pwd2").val()!=$("#m_pwd").val()){
 				$("#pwd2_info").text("비밀번호가 맞지 않습니다.").css("color","red");
+				redTextCount++;
 			}
 			else{
 				$("#pwd2_info").text("");
@@ -61,8 +74,9 @@
 		})
 	})
 	
-	function validate(){
+		function validate(){
 			var returnFlag = true;
+			
 			//빈칸 없는지 확인
 			   $(".input-box").each(function(i,e){
 		     //console.log(i+"번째 값 "+$(e).val());
@@ -72,6 +86,13 @@
 			         return false;
 			      }
 		   });
+				if(redTextCount!=0){
+					//console.log(redTextCount);
+					alert("잘못 입력한 값이 있습니다.");
+					returnFlag = false;
+					return false;
+				}
+			
 			      if(returnFlag){
 			    	  $("#memberInsertForm").submit();
 			      }
