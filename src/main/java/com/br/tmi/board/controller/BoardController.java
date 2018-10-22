@@ -28,20 +28,46 @@ public class BoardController {
 		String today  = df.format(date);
 		
 		List<BoardVo> bList = boardService.selectDateBoard(today);
-		System.out.println(bList.toString());
+		int a_q_no = bList.get(0).getQ_no();
+		List<BoardReplyVo> rList = boardService.selectNoReply(a_q_no);
 		mv.addObject("bList", bList);
+		mv.addObject("rList", rList);
 		mv.setViewName("board/boardList");
 		return mv;
 	}
 	//날짜 클릭시 해당 날짜 질문으로 이동
 	@RequestMapping("selectDateBoard.do")
 	public ModelAndView selectDateBoard(String selectDate, ModelAndView mv){
-		System.out.println(selectDate);
 		List<BoardVo> bList = boardService.selectDateBoard(selectDate);
-		System.out.println(bList.toString());
+		int a_q_no = bList.get(0).getQ_no();
+		List<BoardReplyVo> rList = boardService.selectNoReply(a_q_no);
 		mv.addObject("bList", bList);
+		mv.addObject("rList",rList);
 		mv.setViewName("board/boardList");
 		
 		return mv;
 	}
+	//화살표로 질문 이동
+	@RequestMapping("selectNoBoard.do")
+	public ModelAndView selectNoBoard(int q_no, ModelAndView mv){
+		List<BoardVo> bList = boardService.selectNoBoard(q_no);
+		List<BoardReplyVo> rList = boardService.selectNoReply(q_no);
+		mv.addObject("bList", bList);
+		mv.addObject("rList", rList);
+		mv.setViewName("board/boardList");
+		
+		return mv;
+	}
+	
+	//댓글 입력
+	@RequestMapping("insertReply.do")
+	public ModelAndView insertReply(BoardReplyVo reply, ModelAndView mv){
+		
+		System.out.println(reply);
+		int result = boardService.insertReply(reply);
+		
+		mv.setViewName("board/boardList");
+		return mv;
+	}
+	
 }

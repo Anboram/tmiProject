@@ -20,6 +20,7 @@
 	<result property="a_delflag" column="A_DELFLAG"/>
 	<result property="a_privateflag" column="A_PRIVATEFLAG"/>
 </resultMap>
+<!-- 날짜로 글 조회 -->
 <select id="selectDateBoard" resultType="Board">
 	SELECT Q_NO, Q_QUESTION, Q_DATE
 	FROM QUESTION
@@ -32,7 +33,24 @@
 	  A.A_WRITEDATE, A.A_DELFLAG, A.A_PRIVATEFLAG 
 	  FROM QUESTION Q JOIN ANSWER A ON(Q.Q_NO= A.A_Q_NO) 
 <!-- map에 put한 이름으로 쓰기 -->
-WHERE To_char(q_date,'MM-DD')='10-20';
+WHERE To_char(q_date,'MM-DD')='10-20'
 </select>
+  <!-- 화살표로 글 조회 -->
+  <select id="selectNoBoard" resultType="Board">
+  SELECT Q_NO, Q_QUESTION, Q_DATE
+	FROM QUESTION
+	WHERE Q_NO=#{q_no} 
+  </select>
+  <select id="selectNoReply" resultType="Reply">
+  	SELECT A_NO, A_M_NO, A_Q_NO, A_ANSWER, A_WRITEDATE, A_DELFLAG, A_PRIVATEFLAG
+  	FROM ANSWER 
+  	WHERE A_Q_NO = #{a_q_no}
+  </select>
+  
+  <insert id="insertReply" parameterType="Reply">
+  	INSERT INTO ANSWER
+  	VALUES(1, #{a_m_no}, #{a_q_no}, #{a_answer}, SYSDATE, default, #{a_privateflag})
+  </insert>
+  
   
   </mapper>
